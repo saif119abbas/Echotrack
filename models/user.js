@@ -42,12 +42,17 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: false,
       },
     },
+    interests: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   });
   user.associate = (models) => {
     user.hasOne(models.environmentalData);
     user.hasOne(models.environmentalAlerts);
     user.hasOne(models.report);
     user.hasOne(models.score);
+    user.hasOne(models.notifications);
   };
   return user;
 };
