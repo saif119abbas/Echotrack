@@ -41,6 +41,13 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: false,
       },
     },
+    unit: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validator: {
+        notEmpty: false,
+      },
+    },
   });
   environmentalData.associate = (models) => {
     environmentalData.belongsTo(models.user);
