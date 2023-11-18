@@ -35,5 +35,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   });
+  educational.educational = (models) => {
+    educational.hasMany(models.comment);
+  };
   return educational;
 };
