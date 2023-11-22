@@ -14,12 +14,14 @@ exports.commentMiddleWare = catchAsync(async (req, res, next) => {
       attributes: ["userUserId"],
       where: { id: commentId },
     });
-    if (!user || user.userUserId !== userUserId)
+    console.log("user id", user.userUserId);
+    console.log("id", userUserId);
+    if (!user || user.userUserId !== parseInt(userUserId))
       return res.status(403).json({
-        status: "failed",
+        status: "failure",
         message: "not allowed",
       });
-    else if (user.userUserId === userUserId) return next();
+    else if (user.userUserId === parseInt(userUserId)) return next();
   } catch (err) {
     console.log(err);
     return next(new AppError("An error occurred please try again", 500));

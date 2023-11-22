@@ -9,10 +9,12 @@ exports.createEducationalValidation = Joi.object({
   description: Joi.string()
     .required()
     .error(new Error("❌ Please the discription")),
-  url: Joi.number()
+  url: Joi.string()
     .required()
-    .pattern(/^((https)|(http)):\/\/\w+$/)
-    .message("❌ You must use a Najah student email"),
+    .pattern(
+      /^(https?|ftp):\/\/(?:(?:\S+):(?:\S+)@)?((?:www\.)?[a-zA-Z0-9.-]+)(?::(\d+))?((?:\/[^\/?#]*)*)(?:\?([^#]*))?(?:#(\S+))?/
+    )
+    .message("❌ this is not url"),
   category: Joi.string()
     .required()
     .error(new Error("❌ Please enter the category")),
@@ -24,9 +26,11 @@ exports.editEducationalValidation = Joi.object({
     .max(25)
     .message("❌ Too Long!"),
   description: Joi.string(),
-  url: Joi.number()
-    .pattern(/^((https)|(http)):\/\/\w+$/)
-    .message("❌ You must use a Najah student email"),
+  url: Joi.string()
+    .pattern(
+      /^(https?|ftp):\/\/(?:(?:\S+):(?:\S+)@)?((?:www\.)?[a-zA-Z0-9.-]+)(?::(\d+))?((?:\/[^\/?#]*)*)(?:\?([^#]*))?(?:#(\S+))?/
+    )
+    .message("❌ this is not url"),
   category: Joi.string(),
 })
   .min(1)
