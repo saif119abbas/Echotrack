@@ -1,27 +1,13 @@
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const { environmentalAlerts, environmentalData } = require("../models");
+const { addDocument } = require("../handleFactory");
+
 exports.myAlerts = catchAsync(async (req, res, next) => {
   const id = req.params.userId;
   const data = req.body;
   data.userUserId = id;
-  environmentalAlerts
-    .create(data)
-    .then((record) => {
-      if (record.length === 1)
-        return res.status(201).json({
-          status: "success",
-          message: "created successfully",
-        });
-    })
-    .catch((err) => {
-      if (err.name === "SequelizeUniqueConstraintError")
-        return res.status(400).json({
-          status: "failure",
-          message: "you have already created this threshold",
-        });
-      return next(new AppError("An error occurred please try again", 500));
-    });
+  return await addDocument(environmentalAlerts, data, res, next);
 });
 exports.notify = catchAsync(async (req, res, next) => {
   const id = req.params.id;
