@@ -6,8 +6,8 @@ const {
   createEducationalValidation,
   editEducationalValidation,
 } = require("./educationalValidation");
-/*const { addUserValdition, editUserValdition } = require("./userValidation");
-const { addData, editData } = require("./dataValidation");*/
+const { addUserValdition, editUserValdition } = require("./userValidation");
+const { addData, editData } = require("./dataValidation");
 const { commentValidation } = require("./commentsValidation");
 exports.validtaeAddUser = (req, res, next) => {
   const data = req.body;
@@ -20,7 +20,7 @@ exports.validtaeAddUser = (req, res, next) => {
   }
   next();
 };
-/*exports.validtaeEditUser = (req, res, next) => {
+exports.validtaeEditUser = (req, res, next) => {
   const data = req.body;
   const { error, _ } = editUserValdition.validate(data);
   if (error) {
@@ -52,7 +52,7 @@ exports.validtaeEditData = (req, res, next) => {
     });
   }
   return next();
-};*/
+};
 exports.validtaeNewAlert = (req, res, next) => {
   const data = req.body;
   const { error, _ } = createAlertValidation.validate(data);
