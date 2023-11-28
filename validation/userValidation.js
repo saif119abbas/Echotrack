@@ -32,3 +32,10 @@ exports.editUserValdition = Joi.object({
 })
   .min(1)
   .message("Please enter the infromaton you want to edit");
+exports.loginValidation = Joi.object({
+  email: Joi.string()
+    .required()
+    .pattern(/\w+@gmail.com/)
+    .message("❌ valid email"),
+  password: Joi.string().required().min(8).message("❌ Too Short!"),
+});

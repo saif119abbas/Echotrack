@@ -1,9 +1,11 @@
 const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config({ path: ".env" });
-const userRouters = require("./router/userRouter");
+const userRouter = require("./router/userRouter");
+const guestRouter = require("./router/guestRouter");
 //dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(process.env.BASE_URL, userRouters);
+app.use(process.env.BASE_URL, userRouter);
+app.use(process.env.BASE_URL, guestRouter);
 module.exports = app;
