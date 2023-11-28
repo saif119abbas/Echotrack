@@ -8,7 +8,9 @@ exports.addRecource = catchAsync(async (req, res, next) => {
 });
 exports.getRecouces = catchAsync(async (_, res, next) => {
   try {
+    console.log("resources");
     const resources = await educational.findAll();
+    console.log(resources);
     if (resources) return res.status(200).json({ resources });
   } catch (err) {
     console.log(err);
@@ -46,7 +48,7 @@ exports.getRecoucesById = catchAsync(async (req, res, next) => {
 exports.getRecoucesByCategory = catchAsync(async (req, res, next) => {
   try {
     const category = req.params.category;
-    const resources = await educational.findOne({ where: { category } });
+    const resources = await educational.findAll({ where: { category } });
     if (!resources || resources.length === 0)
       return res.status(404).json({
         message: "no resource found of this category",

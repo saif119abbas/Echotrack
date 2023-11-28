@@ -6,9 +6,36 @@ const {
   createEducationalValidation,
   editEducationalValidation,
 } = require("./educationalValidation");
-const { addUserValdition, editUserValdition } = require("./userValidation");
+const {
+  addUserValdition,
+  editUserValdition,
+  loginValidation,
+} = require("./userValidation");
 const { addData, editData } = require("./dataValidation");
 const { commentValidation } = require("./commentsValidation");
+exports.validtaeLogin = (req, res, next) => {
+  const data = req.body;
+  console.log("validtae login", data);
+  const { error, _ } = loginValidation.validate(data);
+  if (error) {
+    return res.status(400).json({
+      status: "failure",
+      message: error.message,
+    });
+  }
+  return next();
+};
+exports.validtaeAddUser = (req, res, next) => {
+  const data = req.body;
+  const { error, _ } = addUserValdition.validate(data);
+  if (error) {
+    return res.status(400).json({
+      status: "failure",
+      message: error.message,
+    });
+  }
+  next();
+};
 exports.validtaeAddUser = (req, res, next) => {
   const data = req.body;
   const { error, _ } = addUserValdition.validate(data);
