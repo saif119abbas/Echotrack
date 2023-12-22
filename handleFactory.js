@@ -9,6 +9,7 @@ exports.addDocument = (model, data, res, next) => {
       });
     })
     .catch((err) => {
+      console.log("error", err);
       if (err.name === "SequelizeUniqueConstraintError")
         return res.status(400).json({
           status: "failure",

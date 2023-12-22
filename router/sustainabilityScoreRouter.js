@@ -5,13 +5,15 @@ const {
     getSustainabilityLeaderboard
 } = require('../controller/sustainabilityScoreController');
 const { sustainabilityScoreMiddleware } = require('../MiddleWare/sustainabilityScoreMiddleware');
-const protect = require('../middleware/protect'); // Assuming this is your authentication middleware
+const {
+    protect,
+  } = require("../controller/userController");
 
 const router = express.Router();
 
 // Route to calculate and update a user's sustainability score
 // Here, we assume that the user can only calculate/update their own score
-router.post('/sustainability/:userId/calculateScore', protect, sustainabilityScoreMiddleware, calculateAndUpdateScore);
+router.post('/score/:userId', protect, sustainabilityScoreMiddleware, calculateAndUpdateScore);
 
 // Route to get a user's current sustainability score
 // The middleware ensures that a user can only access their own score or has permission to access others' scores

@@ -30,13 +30,16 @@ exports.login = catchAsync(async (req, res, next) => {
       data.password = undefined;
       data.id = myUser.userId;
       data.role = myUser.role;
-      createSendToken(data, 200, "24h", res);
+      return createSendToken(data, 200, "24h", res);
     }
-    return res.status(400).json({
+    else {
+      return res.status(400).json({
       status: "failed",
       message: "email or password incorrect",
-    });
+      });
+    }
   } catch (err) {
+    console.log(err);
     return next(new AppError("An error occured please try again", 500));
   }
 });
@@ -85,6 +88,7 @@ exports.editProfile = catchAsync(async (req, res, next) => {
 });
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
+  console.log("dhfgl;jasio");
   let token;
   if (
     req.headers.authorization &&
@@ -120,12 +124,12 @@ exports.protect = catchAsync(async (req, res, next) => {
         where: { userId: req.params.userId },
       })
       .then((data) => {
-        if (!data) {
+        /*if (!data) {
           return res.status(401).json({
             status: "failed",
             message: "Unauthorized",
           });
-        }
+        }*/
         // 4) Check if user changed password after the token was issued
         /*if (currentUser.changedPasswordAfter(decoded.iat)) {
           return next(
@@ -133,7 +137,7 @@ exports.protect = catchAsync(async (req, res, next) => {
           );
         }*/
         // GRANT ACCESS TO PROTECTED ROUTE
-        next();
+        return next();
       });
   });
 });

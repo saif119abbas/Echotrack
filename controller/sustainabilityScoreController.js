@@ -1,9 +1,12 @@
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
-const { user, score } = require("../models"); 
+//const { user, score } = require("../models"); 
 const { environmentalData, environmentalAlerts, report, educational, openData, score, user } = require("../models");
+const { addDocument, updateDocument } = require("../handleFactory");
+//const { response } = require("../app");
 
 exports.calculateAndUpdateScore = catchAsync(async (req, res, next) => {
+    console.log("calculateScore");
     const userId = req.params.userId;
 
     
@@ -35,9 +38,9 @@ exports.calculateAndUpdateScore = catchAsync(async (req, res, next) => {
 
     // Total points (include educationalPoints and openDataPoints if applicable)
     let totalScore = environmentalDataPoints + environmentalAlertsPoints + reportPoints; // + educationalPoints + openDataPoints;
-
-    
-    const [userScore, created] = await score.findOrCreate({
+    const data = {scoreValue: req.body.score, userUserId: userId};
+    await addDocument (score,data,res,next);
+    /*const [userScore, created] = await score.findOrCreate({
         where: { userId: userId },
         defaults: { scoreValue: totalScore }
     });
@@ -51,10 +54,8 @@ exports.calculateAndUpdateScore = catchAsync(async (req, res, next) => {
         message: "Sustainability score updated successfully",
         userId: userId,
         sustainabilityScore: totalScore
-    });
-}).catch(err => {
-    return next(new AppError("An error occurred, please try again", 500));
-});
+    });*/
+})
 
 
 exports.getUserScore = catchAsync(async (req, res, next) => {
