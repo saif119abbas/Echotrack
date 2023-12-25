@@ -3,7 +3,6 @@ exports.addData = Joi.object({
   dataType: Joi.string()
     .required()
     .error(new Error("❌ Please enter the data type")),
-  key: Joi.string().required().error(new Error("❌ Please enter the key")),
   value: Joi.number().required().invalid().error(new Error("need number only")),
   location: Joi.string()
     .required()

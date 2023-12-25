@@ -1,4 +1,4 @@
-exports.addDocument = (model, data, res, next) => {
+exports.addDocument = (model, data, res) => {
   model
     .create(data)
     .then((record) => {
@@ -20,7 +20,7 @@ exports.addDocument = (model, data, res, next) => {
       });
     });
 };
-exports.updateDocument = (model, data, condition, res, next) => {
+exports.updateDocument = (model, data, condition, res) => {
   console.log("The res", condition);
   model
     .update(data, { where: condition })
@@ -56,7 +56,7 @@ exports.updateDocument = (model, data, condition, res, next) => {
       });
     });
 };
-exports.deleteDocument = (model, condition, res, next) => {
+exports.deleteDocument = (model, condition, res) => {
   console.log("The res", condition);
   model
     .destroy({ where: condition })

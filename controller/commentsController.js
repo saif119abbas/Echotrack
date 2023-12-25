@@ -18,19 +18,19 @@ exports.addComment = catchAsync(async (req, res, next) => {
   data.userUserId = userId;
   data.educationalId = educationalId;
   console.log("data: ", data);
-  addDocument(comment, data, res, next);
+  addDocument(comment, data, res);
 });
 exports.editComment = catchAsync(async (req, res, next) => {
   const id = req.params.commentId;
   const data = req.body;
   const condition = { id };
-  updateDocument(comment, data, condition, res, next);
+  updateDocument(comment, data, condition, res);
 });
 
 exports.deleteComment = catchAsync(async (req, res, next) => {
   const id = req.params.commentId;
   const condition = { id };
-  deleteDocument(comment, condition, res, next);
+  deleteDocument(comment, condition, res);
 });
 exports.getComments = catchAsync(async (req, res, next) => {
   try {
