@@ -104,14 +104,14 @@ exports.protect = catchAsync(async (req, res, next) => {
     return next(new AppError("someerror happen please try again", 401));*/
 
   // 2) Verification token
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, res) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
       console.log(err);
       return next(
         new AppError("An error occurred while verifying the token.", 500)
       );
     }
-    console.log("##", res.iat - Date.now());
+    console.log("##", decoded.iat - Date.now());
     /* if (Date.now() / 1000 - res.iat <= res.exp)
       return next(new AppError("Timed out please try again", 401));*/
     // 3) Check if user still exists

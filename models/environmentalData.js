@@ -12,14 +12,6 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: false,
       },
     },
-
-    key: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validator: {
-        notEmpty: false,
-      },
-    },
     location: {
       type: DataTypes.STRING,
       allowNull: false,
