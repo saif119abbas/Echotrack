@@ -12,84 +12,8 @@ const {
   updateDocument,
   deleteDocument,
 } = require("../handleFactory");
-
-exports.myAlerts = catchAsync(async (req, res) => {
-  const id = req.params.userId;
-  const data = req.body;
-  data.userUserId = id;
-  return await addDocument(environmentalAlerts, data, res);
-});
-exports.notify = catchAsync(async (req, res, next) => {
-  const id = req.params.userId;
-  const alerts = await new Promise((resolve) => {
-    environmentalAlerts
-      .findAll({
-        attributes: ["alertType", "threshold"],
-        where: { userUserId: id },
-      })
-      .then((record) => {
-        resolve(record);
-      });
-  });
-  console.log("alerts", alerts);
-  const currentDate = new Date();
-  currentDate.setHours(0);
-  currentDate.setMinutes(0);
-  currentDate.setSeconds(0);
-  const nextDate = new Date(currentDate);
-  nextDate.setDate(currentDate.getDate() + 1);
-  /*const dataCollection = await new Promise((resolve) => {
-    environmentalData
-      .findAll({
-        attributes: ["dataType", "value"],
-        where: {
-          createdAt: {
-            [Op.gte]: currentDate,
-            [Op.lt]: nextDate,
-          },
-        },
-      })
-      .then((record) => {
-        resolve(record);
-      });
-  });*/
-
-  for (let alert of alerts) {
-    const dataItem = await new Promise((resolve) => {
-      environmentalData
-        .findOne({
-          attributes: ["dataType", "value"],
-          where: {
-            createdAt: {
-              [Op.gte]: currentDate,
-              [Op.lt]: nextDate,
-            },
-            //  userUserId: id, // Assuming userUserId is a field in environmentalData table
-            //  dataType: alert.alertType, // Match the specific dataType from the alert
-          },
-        })
-        .then((record) => {
-          resolve(record);
-        });
-    });
-    console.log(dataItem);
-    if (
-      alert.alertType === dataItem.dataType &&
-      dataItem.value !== alert.threshold
-    ) {
-      const myData = {
-        decription: `${alert.alertType} notification: the value of ${alert.alertType} is ${dataItem.value} and your threshold is ${alert.threshold}`,
-        userUserId: id,
-      };
-      await sendNotification(`consider ${alert.alertType}`, myData.decription);
-      await notifications.create(myData);
-    }
-  }
-  res.status(200).json({
-    message: "notification sent successfully",
-  });
-});
 async function sendNotification(title, message) {
+  console.log("Here");
   return new Promise((resolve, reject) => {
     const notificationOptions = {
       title: title || "Default Title",
@@ -108,6 +32,89 @@ async function sendNotification(title, message) {
     });
   });
 }
+
+exports.myAlerts = catchAsync(async (req, res) => {
+  const id = req.params.userId;
+  const data = req.body;
+  data.userUserId = id;
+  return await addDocument(environmentalAlerts, data, res);
+});
+exports.notify = catchAsync(async (req, res) => {
+  const id = req.params.userId;
+  const alerts = await new Promise((resolve) => {
+    environmentalAlerts
+      .findAll({
+        attributes: ["alertType", "threshold"],
+        where: { userUserId: id },
+      })
+      .then((record) => {
+        resolve(record);
+      });
+  });
+  console.log("alerts", alerts);
+  const currentDate = new Date();
+  currentDate.setHours(0);
+  currentDate.setMinutes(0);
+  currentDate.setSeconds(0);
+  const nextDate = new Date(currentDate);
+  nextDate.setDate(currentDate.getDate() + 1);
+  let success = false;
+  for (let alert of alerts) {
+    const dataItem = await new Promise((resolve) => {
+      environmentalData
+        .findOne({
+          attributes: ["dataType", "value"],
+          where: {
+            createdAt: {
+              [Op.gte]: currentDate,
+              [Op.lt]: nextDate,
+            },
+            dataType: alert.alertType,
+          },
+        })
+        .then((record) => {
+          resolve(record);
+        });
+    });
+    console.log(dataItem);
+    if (!dataItem) continue;
+    if (
+      alert.alertType === dataItem.dataType &&
+      dataItem.value !== alert.threshold
+    ) {
+      console.log("Yes alreted");
+      const createdAt = new Date().toISOString().substring(0, 10);
+      const myData = {
+        decription: `${alert.alertType} notification: the value of ${alert.alertType} is ${dataItem.value} and your threshold is ${alert.threshold}`,
+        userUserId: id,
+        createdAt,
+      };
+      await notifications
+        .create(myData)
+        .then(async () => {
+          success = true;
+          await sendNotification(
+            `consider ${alert.alertType}`,
+            myData.decription
+          );
+        })
+        .catch((err) => {
+          if (err.name !== "SequelizeUniqueConstraintError")
+            return res.status(500).json({
+              status: "failed",
+              message: "Internal Server Error",
+            });
+        });
+    }
+  }
+  if (success)
+    return res.status(200).json({
+      message: "notification sent successfully",
+    });
+  return res.status(200).json({
+    message: "no notification",
+  });
+});
 exports.editMyAlerts = catchAsync(async (req, res) => {
   const id = req.params.userId;
   const alertId = req.params.alertId;
