@@ -3,6 +3,8 @@ const {
   myAlerts,
   editMyAlerts,
   cancelMyAlerts,
+  getMyAlerts,
+  notify,
 } = require("../controller/notificationController");
 const {
   addProfile,
@@ -14,26 +16,18 @@ const {
   addData,
   editData,
   deleteData,
+  getMyData,
 } = require("../controller/dataController");
 const { dataMiddleWare } = require("../MiddleWare/dataCollectionMiddleWare");
-const {
-  addRecource,
-  getRecouces,
-  getRecoucesByTitle,
-  getRecoucesById,
-  getRecoucesByCategory,
-} = require("../controller/educationalController");
 const {
   addComment,
   editComment,
   deleteComment,
-  getComments,
 } = require("../controller/commentsController");
 const { commentMiddleWare } = require("../MiddleWare/commentMiddleWare");
 const {
   validtaeNewAlert,
   validtaeEditedAert,
-  validtaeCreateEducational,
   validtaeEditEducational,
   validtaeComment,
   validtaeAddUser,
@@ -54,13 +48,10 @@ router.put(
   validtaeEditedAert,
   editMyAlerts
 );
+router.get("/alert/:userId", protect, getMyAlerts);
 router.delete("/alert/:userId/:alertId", protect, cancelMyAlerts);
-// resource Features
-router.post("/rescourse", validtaeCreateEducational, addRecource);
-router.get("/rescourses", getRecouces);
-router.get("/getrecoucesbytitle/:title", getRecoucesByTitle);
-router.get("/getrecoucesbyid/:id", getRecoucesById);
-router.get("/getrecoucesbycategory/:category", getRecoucesByCategory);
+router.post("/notify/:userId", protect, notify);
+
 // comment Features
 router.post("/comment/:userId/:educationalId", protect, addComment);
 router.put(
@@ -76,7 +67,6 @@ router.delete(
   commentMiddleWare,
   deleteComment
 );
-router.get("/comment/:educationalId", getComments);
 //environmental Data features
 router.post("/environmental/:userId", protect, validtaeAddData, addData);
 router.put(
@@ -92,4 +82,5 @@ router.delete(
   dataMiddleWare,
   deleteData
 );
+router.get("/environmental/:userId", protect, getMyData);
 module.exports = router;

@@ -2,9 +2,9 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const { educational } = require("../models");
 const { addDocument } = require("../handleFactory");
-exports.addRecource = catchAsync(async (req, res, next) => {
+exports.addRecource = catchAsync(async (req, res) => {
   const data = req.body;
-  addDocument(educational, data, res, next);
+  addDocument(educational, data, res);
 });
 exports.getRecouces = catchAsync(async (_, res, next) => {
   try {

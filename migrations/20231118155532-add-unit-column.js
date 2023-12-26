@@ -17,3 +17,6 @@ module.exports = {
     return queryInterface.removeColumn("environmentaldata", "unit");
   },
 };
+{
+  score: "##";
+}
