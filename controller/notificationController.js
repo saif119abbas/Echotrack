@@ -89,14 +89,15 @@ exports.notify = catchAsync(async (req, res) => {
         userUserId: id,
         createdAt,
       };
+      await sendNotification(`consider ${alert.alertType} `, myData.decription);
       await notifications
         .create(myData)
         .then(async () => {
           success = true;
-          await sendNotification(
+          /*wait sendNotification(
             `consider ${alert.alertType}`,
             myData.decription
-          );
+          );*/
         })
         .catch((err) => {
           if (err.name !== "SequelizeUniqueConstraintError")

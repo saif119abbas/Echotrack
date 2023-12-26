@@ -63,7 +63,7 @@ exports.addProfile = catchAsync(async (req, res, next) => {
 exports.editProfile = catchAsync(async (req, res, next) => {
   const data = req.body;
   console.log("The Data", data);
-  const userId = req.params.userId;
+  const userId = parseInt(req.params.userId);
   if (data.password) {
     if (data.password !== data.confirmPassword)
       return res.status(400).json({
@@ -86,7 +86,7 @@ exports.editProfile = catchAsync(async (req, res, next) => {
 });
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
-  const userId = req.params.userId;
+  const userId = parseInt(req.params.userId);
   let token;
   if (
     req.headers.authorization &&
@@ -114,6 +114,7 @@ exports.protect = catchAsync(async (req, res, next) => {
       );
     }
     const { id } = decoded;
+    console.log(id, userId);
     if (userId !== id)
       return res.status(403).json({
         status: "failed",
