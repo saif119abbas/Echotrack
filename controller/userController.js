@@ -37,6 +37,7 @@ exports.login = catchAsync(async (req, res, next) => {
       message: "email or password incorrect",
     });
   } catch (err) {
+    console.log(err);
     return next(new AppError("An error occured please try again", 500));
   }
 });
@@ -127,12 +128,12 @@ exports.protect = catchAsync(async (req, res, next) => {
         where: { userId: req.params.userId },
       })
       .then((data) => {
-        if (!data) {
+        /*if (!data) {
           return res.status(401).json({
             status: "failed",
             message: "Unauthorized",
           });
-        }
+        }*/
         // 4) Check if user changed password after the token was issued
         /*if (currentUser.changedPasswordAfter(decoded.iat)) {
           return next(
@@ -140,7 +141,7 @@ exports.protect = catchAsync(async (req, res, next) => {
           );
         }*/
         // GRANT ACCESS TO PROTECTED ROUTE
-        next();
+        return next();
       });
   });
 });
