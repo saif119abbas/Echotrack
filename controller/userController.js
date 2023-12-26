@@ -85,6 +85,7 @@ exports.editProfile = catchAsync(async (req, res, next) => {
 });
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
+  const userId = req.params.userId;
   let token;
   if (
     req.headers.authorization &&
@@ -111,6 +112,12 @@ exports.protect = catchAsync(async (req, res, next) => {
         new AppError("An error occurred while verifying the token.", 500)
       );
     }
+    const { id } = decoded;
+    if (userId !== id)
+      return res.status(403).json({
+        status: "failed",
+        message: "not allowed",
+      });
     console.log("##", decoded.iat - Date.now());
     /* if (Date.now() / 1000 - res.iat <= res.exp)
       return next(new AppError("Timed out please try again", 401));*/
