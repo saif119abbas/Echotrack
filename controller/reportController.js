@@ -5,7 +5,7 @@ const { report } = require("../models");
 // Add a new environmental report
 exports.addReport = catchAsync(async (req, res, next) => {
     const { reportType, description, location } = req.body;
-    const userId = req.user.id; // Assuming the user's ID is stored in req.user
+    const userId = req.user.id; 
     const newReport = await report.create({ reportType, description, location, userId });
     res.status(201).json({
         status: "success",
@@ -39,7 +39,7 @@ exports.getReportById = catchAsync(async (req, res, next) => {
 // Update an environmental report
 exports.updateReport = catchAsync(async (req, res, next) => {
     const reportId = req.params.reportId;
-    const userId = req.user.id; // User's ID from authentication
+    const userId = req.user.id; 
     const updatedData = req.body;
 
     const existingReport = await report.findByPk(reportId);
@@ -62,7 +62,7 @@ exports.updateReport = catchAsync(async (req, res, next) => {
 // Delete an environmental report
 exports.deleteReport = catchAsync(async (req, res, next) => {
     const reportId = req.params.reportId;
-    const userId = req.user.id; // User's ID from authentication
+    const userId = req.user.id; 
 
     const existingReport = await report.findByPk(reportId);
     if (!existingReport) {

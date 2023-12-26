@@ -2,10 +2,10 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const { report } = require("../models");
 
-// Middleware to check if the user is authorized to update/delete the report
+
 exports.verifyReportOwner = catchAsync(async (req, res, next) => {
     const reportId = req.params.reportId;
-    const userId = req.user.id; // Assuming user's ID is stored in req.user
+    const userId = req.user.id;
 
     const existingReport = await report.findByPk(reportId);
     if (!existingReport) {
@@ -16,7 +16,7 @@ exports.verifyReportOwner = catchAsync(async (req, res, next) => {
         return next(new AppError("You are not authorized to perform this action", 403));
     }
 
-    // Add report to the request object if further use in subsequent middleware/controller is needed
+    
     req.report = existingReport;
 
     next();

@@ -1,6 +1,6 @@
 const express = require("express");
 const reportController = require('../controller/reportController');
-const protect = require('../middleware/protect'); // Assuming you have authentication middleware
+const protect = require('../middleware/protect');
 
 const router = express.Router();
 
