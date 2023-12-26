@@ -30,14 +30,12 @@ exports.login = catchAsync(async (req, res, next) => {
       data.password = undefined;
       data.id = myUser.userId;
       data.role = myUser.role;
-      return createSendToken(data, 200, "24h", res);
+      createSendToken(data, 200, "24h", res);
     }
-    else {
-      return res.status(400).json({
+    return res.status(400).json({
       status: "failed",
       message: "email or password incorrect",
-      });
-    }
+    });
   } catch (err) {
     console.log(err);
     return next(new AppError("An error occured please try again", 500));
@@ -65,7 +63,7 @@ exports.addProfile = catchAsync(async (req, res, next) => {
 exports.editProfile = catchAsync(async (req, res, next) => {
   const data = req.body;
   console.log("The Data", data);
-  const userId = req.params.userId;
+  const userId = parseInt(req.params.userId);
   if (data.password) {
     if (data.password !== data.confirmPassword)
       return res.status(400).json({
@@ -88,7 +86,7 @@ exports.editProfile = catchAsync(async (req, res, next) => {
 });
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
-  console.log("dhfgl;jasio");
+  const userId = parseInt(req.params.userId);
   let token;
   if (
     req.headers.authorization &&
@@ -115,6 +113,13 @@ exports.protect = catchAsync(async (req, res, next) => {
         new AppError("An error occurred while verifying the token.", 500)
       );
     }
+    const { id } = decoded;
+    console.log(id, userId);
+    if (userId !== id)
+      return res.status(403).json({
+        status: "failed",
+        message: "not allowed",
+      });
     console.log("##", decoded.iat - Date.now());
     /* if (Date.now() / 1000 - res.iat <= res.exp)
       return next(new AppError("Timed out please try again", 401));*/

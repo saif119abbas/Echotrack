@@ -13,6 +13,10 @@ const {
   forecast,
   globalalert,
 } = require("../controller/externalAPIContorller");
+const {
+  getAllReports,
+  getReportById,
+} = require("../controller/reportController");
 const { validtaeCreateEducational } = require("../validation/validate");
 //Resource Frateures
 router.post("/rescourse", validtaeCreateEducational, addRecource);
@@ -26,4 +30,8 @@ router.get("/comment/:educationalId", getComments);
 router.get("/cuurentweather", curentWeather);
 router.get("/forecast", forecast);
 router.get("/globalalert", globalalert);
+//report feature
+router.get("/report", getAllReports);
+router.get("/report/:reportId", getReportById);
+
 module.exports = router;
