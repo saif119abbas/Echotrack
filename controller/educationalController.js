@@ -4,6 +4,8 @@ const { educational } = require("../models");
 const { addDocument } = require("../handleFactory");
 exports.addRecource = catchAsync(async (req, res) => {
   const data = req.body;
+  const userId = req.params.userId;
+  data.userUserId = userId;
   addDocument(educational, data, res);
 });
 exports.getRecouces = catchAsync(async (_, res, next) => {
