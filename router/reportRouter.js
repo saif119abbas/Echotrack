@@ -20,7 +20,6 @@ router.delete(
   reportController.deleteReport
 );
 
-router.get('/reports/user/:userId', protect, reportController.getReportsByUser);
-
+router.get("/report/user/:userId", protect, reportController.getReportsByUser);
 
 module.exports = router;

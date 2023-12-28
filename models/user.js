@@ -48,11 +48,11 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
   user.associate = (models) => {
-    user.hasOne(models.environmentalData);
-    user.hasOne(models.environmentalAlerts);
-    user.hasOne(models.report);
+    user.hasMany(models.environmentalData);
+    user.hasMany(models.environmentalAlerts);
+    user.hasMany(models.report);
     user.hasOne(models.score);
-    user.hasOne(models.notifications);
+    user.hasMany(models.notifications);
     user.hasMany(models.comment);
   };
   return user;

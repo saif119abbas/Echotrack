@@ -13,7 +13,7 @@ const router = express.Router();
 
 // Route to calculate and update a user's sustainability score
 // Here, we assume that the user can only calculate/update their own score
-router.post("/score/:userId", protect, calculateAndUpdateScore);
+router.put("/score/:userId", protect, calculateAndUpdateScore);
 
 // Route to get a user's current sustainability score
 // The middleware ensures that a user can only access their own score or has permission to access others' scores

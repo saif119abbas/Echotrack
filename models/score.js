@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     scoreValue: {
       type: DataTypes.FLOAT,
+      defaultValue: 0,
       allowNull: false,
       validator: {
         notEmpty: false,

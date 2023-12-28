@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
-const { user, environmentalData } = require("../models");
+const { user, environmentalData, score } = require("../models");
 const { addDocument, updateDocument } = require("../handleFactory");
 const { createSendToken } = require("../utils/createToken");
 
@@ -58,7 +58,15 @@ exports.addProfile = catchAsync(async (req, res, next) => {
     });
   });
   data.confirmPassword = undefined;
-  return addDocument(user, data, res, next);
+  await user.create(data).then(async (record) => {
+    await score.create({ userUserId: record.userId }).then(() => {
+      return res.status(200).json({
+        status: "success",
+        message: "created successfully",
+      });
+    });
+  });
+  // addDocument(user, data, res, next);
 });
 exports.editProfile = catchAsync(async (req, res, next) => {
   const data = req.body;
@@ -96,6 +104,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
   if (!token) {
+    console.log("no");
     return res.status(401).json({
       status: "failed",
       message: "Unauthorized",

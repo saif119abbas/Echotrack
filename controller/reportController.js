@@ -31,19 +31,17 @@ exports.getAllReports = catchAsync(async (_, res) => {
 });
 
 exports.getReportsByUser = catchAsync(async (req, res) => {
+  console.log("userUserId");
   const userUserId = req.params.userId; // Assuming the user's ID is passed as a parameter
-
   const userReports = await report.findAll({
-      where: { userId: userUserId }
+    where: { userUserId },
+    attributes: { exclude: ["createdAt", "updatedAt"] },
   });
 
   res.status(200).json({
-      status: "success",
-      results: userReports.length,
-      data: userReports
+    data: userReports,
   });
 });
-
 
 // Get a specific environmental report by ID
 exports.getReportById = catchAsync(async (req, res, next) => {

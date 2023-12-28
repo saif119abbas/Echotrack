@@ -9,46 +9,55 @@ const {
   openData,
   score,
   user,
+  comment,
 } = require("../models");
 const { addDocument, updateDocument } = require("../handleFactory");
 //const { response } = require("../app");
 
-exports.calculateAndUpdateScore = catchAsync(async (req, res, next) => {
-  const userId = req.params.userId;
+exports.calculateAndUpdateScore = catchAsync(async (req, res) => {
+  const userUserId = req.params.userId;
   const pointsPerDataEntry = 5;
   const pointsPerEducationalResource = 2;
   const pointsPerReport = 10; // Points for each report submitted
-  const pointsPerComment = 1;  // Points for each comment made
-
-  
-  const environmentalDataCount = await environmentalData.count({ where: { userUserId: userId } });
+  const pointsPerComment = 1; // Points for each comment made
+  const models = await user.findOne({
+    where: { userId: userUserId },
+    attributes: [],
+    include: [
+      {
+        model: environmentalData,
+        attributes: ["dataId"],
+      },
+      {
+        model: report,
+        attributes: ["reportId"],
+      },
+      {
+        model: comment,
+        attributes: ["id"],
+      },
+    ],
+  });
+  const { reports, comments } = models;
+  const environmentalDataCount = models.environmentalData.length;
   const environmentalDataPoints = environmentalDataCount * pointsPerDataEntry;
 
- 
-  const educationalResourceCount = await educational.count({ where: { userUserId: userId } });
-  const educationalPoints = educationalResourceCount * pointsPerEducationalResource;
-
- 
-  const reportCount = await report.count({ where: { userUserId: userId } });
+  const reportCount = reports.length;
   const reportPoints = reportCount * pointsPerReport;
 
-  
-  const commentCount = await comment.count({ where: { userUserId: userId } });
+  const commentCount = comments.length;
   const commentPoints = commentCount * pointsPerComment;
-
- 
-  let totalScore = environmentalDataPoints + educationalPoints + reportPoints + commentPoints;
-
- 
-  const data = { scoreValue: totalScore, userUserId: userId };
-  await addDocument(score, data, res, next);
+  let totalScore = environmentalDataPoints + reportPoints + commentPoints;
+  const data = { scoreValue: totalScore };
+  const condition = { userUserId };
+  // return res.status(200).json(models);
+  return updateDocument(score, data, condition, res);
 });
-
 
 exports.getUserScore = catchAsync(async (req, res, next) => {
   const userId = req.params.userId;
 
-  const userScore = await score.findOne({ where: { userId: userId } });
+  const userScore = await score.findOne({ where: { userUserId } });
 
   if (!userScore) {
     return res.status(404).json({
