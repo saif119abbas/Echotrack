@@ -27,13 +27,13 @@ exports.login = catchAsync(async (req, res, next) => {
         resolve(isCorrect);
       });
     });
-    console.log(isTrue);
     if (isTrue) {
       data.password = undefined;
       data.id = myUser.userId;
       data.role = myUser.role;
-      createSendToken(data, 200, "24h", res);
+      return createSendToken(data, 200, "24h", res);
     }
+
     return res.status(400).json({
       status: "failed",
       message: "email or password incorrect",
