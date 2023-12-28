@@ -153,3 +153,26 @@ exports.getMyAlerts = catchAsync(async (req, res) => {
   });
   res.status(200).json({ data });
 });
+exports.getMyNotification = catchAsync(async (req, res) => {
+  const userUserId = req.params.userId;
+  const data = await new Promise((resolve) => {
+    notifications
+      .findAll({
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+        where: {
+          userUserId,
+        },
+      })
+      .then((record) => {
+        resolve(record);
+      });
+  });
+  res.status(200).json({ data });
+});
+exports.deleteNotification = catchAsync(async (req, res) => {
+  const userUserId = req.params.userId;
+  const notifyId = req.params.notificationId;
+  return await deleteDocument(notifications, { userUserId, notifyId }, res);
+});

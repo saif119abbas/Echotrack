@@ -19,13 +19,15 @@ exports.login = catchAsync(async (req, res, next) => {
         status: "failed",
         message: "email or password incorrect",
       });
+
     const password = myUser.password;
-    const isTrue = new Promise((resolve, reject) => {
+    const isTrue = await new Promise((resolve, reject) => {
       bcrypt.compare(data.password, password, (err, isCorrect) => {
         if (err) reject(err);
         resolve(isCorrect);
       });
     });
+    console.log(isTrue);
     if (isTrue) {
       data.password = undefined;
       data.id = myUser.userId;
@@ -58,14 +60,30 @@ exports.addProfile = catchAsync(async (req, res, next) => {
     });
   });
   data.confirmPassword = undefined;
-  await user.create(data).then(async (record) => {
-    await score.create({ userUserId: record.userId }).then(() => {
-      return res.status(200).json({
-        status: "success",
-        message: "created successfully",
+  await user
+    .create(data)
+    .then(async (record) => {
+      await score.create({ userUserId: record.userId }).then(() => {
+        return res.status(200).json({
+          status: "success",
+          message: "created successfully",
+        });
+      });
+    })
+    .catch((err) => {
+      console.log("In update document the err:", err);
+      if (err.name === "SequelizeUniqueConstraintError") {
+        console.log(err.name);
+        return res.status(400).json({
+          status: "failure",
+          message: "already created",
+        });
+      }
+      return res.status(500).json({
+        status: "failure",
+        message: err.message,
       });
     });
-  });
   // addDocument(user, data, res, next);
 });
 exports.editProfile = catchAsync(async (req, res, next) => {
@@ -138,12 +156,12 @@ exports.protect = catchAsync(async (req, res, next) => {
         where: { userId: req.params.userId },
       })
       .then((data) => {
-        /*if (!data) {
+        if (!data) {
           return res.status(401).json({
             status: "failed",
             message: "Unauthorized",
           });
-        }*/
+        }
         // 4) Check if user changed password after the token was issued
         /*if (currentUser.changedPasswordAfter(decoded.iat)) {
           return next(

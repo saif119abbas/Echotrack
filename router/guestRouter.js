@@ -19,7 +19,6 @@ const {
 } = require("../controller/reportController");
 const { validtaeCreateEducational } = require("../validation/validate");
 //Resource Frateures
-router.post("/rescourse", validtaeCreateEducational, addRecource);
 router.get("/rescourses", getRecouces);
 router.get("/getrecoucesbytitle/:title", getRecoucesByTitle);
 router.get("/getrecoucesbyid/:id", getRecoucesById);

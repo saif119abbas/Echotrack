@@ -3,16 +3,13 @@ const catchAsync = require("../utils/catchAsync");
 //const { user, score } = require("../models");
 const {
   environmentalData,
-  environmentalAlerts,
   report,
   educational,
-  openData,
   score,
   user,
   comment,
 } = require("../models");
 const { addDocument, updateDocument } = require("../handleFactory");
-//const { response } = require("../app");
 
 exports.calculateAndUpdateScore = catchAsync(async (req, res) => {
   const userUserId = req.params.userId;
@@ -36,9 +33,13 @@ exports.calculateAndUpdateScore = catchAsync(async (req, res) => {
         model: comment,
         attributes: ["id"],
       },
+      {
+        model: educational,
+        attributes: ["id"],
+      },
     ],
   });
-  const { reports, comments } = models;
+  const { reports, comments, educationals } = models;
   const environmentalDataCount = models.environmentalData.length;
   const environmentalDataPoints = environmentalDataCount * pointsPerDataEntry;
 
@@ -47,7 +48,12 @@ exports.calculateAndUpdateScore = catchAsync(async (req, res) => {
 
   const commentCount = comments.length;
   const commentPoints = commentCount * pointsPerComment;
-  let totalScore = environmentalDataPoints + reportPoints + commentPoints;
+
+  const educationalCount = educationals.length;
+  const educationalPoints = educationalCount * pointsPerEducationalResource;
+
+  let totalScore =
+    environmentalDataPoints + reportPoints + commentPoints + educationalPoints;
   const data = { scoreValue: totalScore };
   const condition = { userUserId };
   // return res.status(200).json(models);

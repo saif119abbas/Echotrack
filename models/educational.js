@@ -37,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   educational.educational = (models) => {
     educational.hasMany(models.comment);
+    educational.belongsTo(models.user);
   };
   return educational;
 };

@@ -14,7 +14,7 @@ exports.createSendToken = (data, statusCode, expiresIn, res) => {
   //localStorage.setItem("jwt", token);
   // Remove password from output
   data.password = undefined;
-  res.status(statusCode).json({
+  return res.status(statusCode).json({
     status: "success",
     token,
     data,

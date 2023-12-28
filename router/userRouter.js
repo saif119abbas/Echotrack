@@ -5,6 +5,8 @@ const {
   cancelMyAlerts,
   getMyAlerts,
   notify,
+  getMyNotification,
+  deleteNotification,
 } = require("../controller/notificationController");
 const {
   addProfile,
@@ -24,6 +26,7 @@ const {
   editComment,
   deleteComment,
 } = require("../controller/commentsController");
+const { addRecource } = require("../controller/educationalController");
 const { commentMiddleWare } = require("../MiddleWare/commentMiddleWare");
 const {
   validtaeNewAlert,
@@ -35,6 +38,7 @@ const {
   validtaeAddData,
   validtaeEditData,
   validtaeLogin,
+  validtaeCreateEducational,
 } = require("../validation/validate");
 const router = express.Router();
 router.post("/login", validtaeLogin, login);
@@ -50,8 +54,15 @@ router.put(
 );
 router.get("/alert/:userId", protect, getMyAlerts);
 router.delete("/alert/:userId/:alertId", protect, cancelMyAlerts);
-router.post("/notify/:userId", protect, notify);
-
+router.post("/notification/:userId", protect, notify);
+router.get("/notification/:userId", protect, getMyNotification);
+router.delete(
+  "/notification/:userId/:notificationId",
+  protect,
+  deleteNotification
+);
+//resource feature
+router.post("/rescourse/:userId", validtaeCreateEducational, addRecource);
 // comment Features
 router.post("/comment/:userId/:educationalId", protect, addComment);
 router.put(

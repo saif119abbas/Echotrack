@@ -32,7 +32,7 @@ exports.getAllReports = catchAsync(async (_, res) => {
 
 exports.getReportsByUser = catchAsync(async (req, res) => {
   console.log("userUserId");
-  const userUserId = req.params.userId; // Assuming the user's ID is passed as a parameter
+  const userUserId = req.params.userId; 
   const userReports = await report.findAll({
     where: { userUserId },
     attributes: { exclude: ["createdAt", "updatedAt"] },
@@ -43,7 +43,6 @@ exports.getReportsByUser = catchAsync(async (req, res) => {
   });
 });
 
-// Get a specific environmental report by ID
 exports.getReportById = catchAsync(async (req, res, next) => {
   const reportId = req.params.reportId;
   const reportDetails = await report.findByPk(reportId);
@@ -56,7 +55,7 @@ exports.getReportById = catchAsync(async (req, res, next) => {
   });
 });
 
-// Update an environmental report
+
 exports.updateReport = catchAsync(async (req, res) => {
   try {
     const reportId = req.params.reportId;
@@ -85,7 +84,6 @@ exports.updateReport = catchAsync(async (req, res) => {
   }
 });
 
-// Delete an environmental report
 exports.deleteReport = catchAsync(async (req, res) => {
   try {
     const reportId = req.params.reportId;

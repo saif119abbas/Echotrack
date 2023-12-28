@@ -54,6 +54,7 @@ module.exports = (sequelize, DataTypes) => {
     user.hasOne(models.score);
     user.hasMany(models.notifications);
     user.hasMany(models.comment);
+    user.hasMany(models.educational);
   };
   return user;
 };
